@@ -102,8 +102,7 @@ SESS_GET_REQUEST_BYTYPE = endpoints.ResourceContainer(
 )
 
 SESS_GET_REQUEST_BYSPEAKER = endpoints.ResourceContainer(
-    websafeConferenceKey=messages.StringField(1, required=True),
-    speaker=messages.StringField(2, required=True),
+    speaker=messages.StringField(1, required=True),
 )
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -689,11 +688,6 @@ class ConferenceApi(remote.Service):
         http_method='GET', name='getSessionsBySpeaker')
     def getSessionsBySpeaker(self, request):
         """Return sessions given by a specified speaker, any conference"""
-        # get Conference object from request; bail if not found
-        conf = ndb.Key(urlsafe=request.websafeConferenceKey).get()
-        if not conf:
-            raise endpoints.NotFoundException(
-                'No conference found with key: %s' % request.websafeConferenceKey)
         sessions = Session.query().\
             filter(Session.speaker == request.speaker)      
         return SessionForms(
